@@ -13,7 +13,7 @@ before_build:
   - cmd: dotnet restore Configuration.MongoDb.sln
 build_script:
   - choco install "msbuild-sonarqube-runner" -y
-  - ps: if (-Not $env:APPVEYOR_PULL_REQUEST_NUMBER) { MSBuild.SonarQube.Runner.exe begin /k:"midmid.configuration.mongodb" /o:"midmid" /d:"sonar.host.url=https://sonarcloud.io" /d:"sonar.login=$env:SQ_TOKEN" /d:sonar.cs.opencover.reportsPaths="%APPVEYOR_BUILD_FOLDER%\Test-Coverage.xml" /d:sonar.cs.vstest.reportsPaths="%APPVEYOR_BUILD_FOLDER%\TestResults\*.trx" }
+  - ps: if (-Not $env:APPVEYOR_PULL_REQUEST_NUMBER) { MSBuild.SonarQube.Runner.exe begin /k:"midmid.configuration.mongodb" /o:"midmid" /d:"sonar.host.url=https://sonarcloud.io" /d:"sonar.login=$env:SQ_TOKEN" /d:sonar.cs.opencover.reportsPaths="$env:APPVEYOR_BUILD_FOLDER\Test-Coverage.xml" /d:sonar.cs.vstest.reportsPaths="$env:APPVEYOR_BUILD_FOLDER\TestResults\*.trx" }
   - msbuild Configuration.MongoDb.sln /p:Configuration=Release
   - msbuild cibuild.proj /t:TestWithCoverage;AnalyzeTestResults /p:Configuration=Release
   - ps: if (-Not $env:APPVEYOR_PULL_REQUEST_NUMBER) { MSBuild.SonarQube.Runner.exe end /d:"sonar.login=$env:SQ_TOKEN" }
