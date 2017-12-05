@@ -1,0 +1,42 @@
+<Project ToolsVersion="15.0" DefaultTargets="Build;TestWithCoverage;AnalyzeTestResults">
+    <PropertyGroup>
+        <Configuration>Release</Configuration>
+        <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">$(MSBuildThisFileDirectory)</SolutionDir>
+        <AllTestsPassed>true</AllTestsPassed>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <NuGetPackageDir>$(UserProfile)\.nuget\packages\</NuGetPackageDir>
+        <OpenCoverExe>$(NuGetPackageDir)OpenCover\4.6.519\tools\OpenCover.Console.exe</OpenCoverExe>
+        <DotNetExe>C:\Program Files\dotnet\dotnet.exe</DotNetExe>
+    </PropertyGroup>
+
+    <Target Name="Build">
+        <ItemGroup>
+            <ProjectsToBuild Include="$(SolutionDir)**\*.csproj" />
+        </ItemGroup>
+        <MSBuild Projects="@(ProjectsToBuild)" Properties="Configuration=$(Configuration)" />
+    </Target>
+
+    <Target Name="TestWithCoverage">
+        <ItemGroup>
+            <TestProjects Include="$(SolutionDir)test\**\*.csproj" />
+            <PreviousTestResultsFiles Include="$(SolutionDir)TestResults\*.trx" />
+        </ItemGroup>
+
+        <Delete Files="$(SolutionDir)Test-Coverage.xml" />
+        <Delete Files="@(PreviousTestResultsFiles)" />
+        
+        <Exec Command='$(OpenCoverExe) -oldstyle -mergeoutput -mergebyhash -coverbytest -register:user "-target:$(DotNetExe)" -targetdir:%(TestProjects.RelativeDir) -targetargs:"test --no-build --configuration $(Configuration) --logger trx;LogFileName=$(SolutionDir)TestResults\%(TestProjects.FileName).trx %(TestProjects.Identity)" -filter:"+[Midmid*]* -[*Test*]*" -output:$(SolutionDir)Test-Coverage.xml -returntargetcode' IgnoreExitCode="true">
+            <Output TaskParameter="ExitCode" ItemName="TestExitCodes" />
+        </Exec>
+
+        <PropertyGroup>
+            <AllTestsPassed Condition="'%(TestExitCodes.Identity)' != '0'">false</AllTestsPassed>
+        </PropertyGroup>
+    </Target>
+
+    <Target Name="AnalyzeTestResults">
+        <Error Text="One or more test(s) failed." Condition="'$(AllTestsPassed)' != 'true'" />
+    </Target>
+</Project>
