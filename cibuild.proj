@@ -1,6 +1,6 @@
-<Project ToolsVersion="15.0" DefaultTargets="Build;TestWithCoverage;AnalyzeTestResults">
+<Project ToolsVersion="15.0" DefaultTargets="TestWithCoverage;AnalyzeTestResults;Package">
     <PropertyGroup>
-        <Configuration>Release</Configuration>
+        <Configuration Condition="'$(Configuration)' == ''">Release</Configuration>
         <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">$(MSBuildThisFileDirectory)</SolutionDir>
         <AllTestsPassed>true</AllTestsPassed>
     </PropertyGroup>
@@ -10,13 +10,6 @@
         <OpenCoverExe>$(NuGetPackageDir)OpenCover\4.6.519\tools\OpenCover.Console.exe</OpenCoverExe>
         <DotNetExe>C:\Program Files\dotnet\dotnet.exe</DotNetExe>
     </PropertyGroup>
-
-    <Target Name="Build">
-        <ItemGroup>
-            <ProjectsToBuild Include="$(SolutionDir)**\*.csproj" />
-        </ItemGroup>
-        <MSBuild Projects="@(ProjectsToBuild)" Properties="Configuration=$(Configuration)" />
-    </Target>
 
     <Target Name="TestWithCoverage">
         <ItemGroup>
@@ -38,5 +31,9 @@
 
     <Target Name="AnalyzeTestResults">
         <Error Text="One or more test(s) failed." Condition="'$(AllTestsPassed)' != 'true'" />
+    </Target>
+
+    <Target Name="Package">
+        <Exec Command='"$(DotNetExe)" pack "$(SolutionDir)src\Midmid.Configuration.MongoDb\Midmid.Configuration.MongoDb.csproj" --no-build --configuration $(Configuration) /p:PackageVersion=$(APPVEYOR_BUILD_VERSION) --output nupkg' />
     </Target>
 </Project>
