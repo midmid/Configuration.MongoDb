@@ -10,6 +10,11 @@ namespace Microsoft.Extensions.Configuration
             return AddMongoDb(configurationBuilder, new DefaultMongoDbReader(connectionString), "AppSettings");
         }
 
+        public static IConfigurationBuilder AddMongoDb(this IConfigurationBuilder configurationBuilder, string connectionString, string collectionName)
+        {
+            return AddMongoDb(configurationBuilder, new DefaultMongoDbReader(connectionString), collectionName);
+        }
+
         public static IConfigurationBuilder AddMongoDb(this IConfigurationBuilder configurationBuilder, IMongoDbReader mongoDbReader)
         {
             return AddMongoDb(configurationBuilder, mongoDbReader, "AppSettings");
