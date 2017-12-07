@@ -3,7 +3,7 @@
         <Configuration Condition="'$(Configuration)' == ''">Release</Configuration>
         <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">$(MSBuildThisFileDirectory)</SolutionDir>
         <AllTestsPassed>true</AllTestsPassed>
-        <PackageVersion Condition="'$(APPVEYOR_REPO_TAG_NAME)' == ''">$(APPVEYOR_REPO_TAG_NAME)</PackageVersion>
+        <PackageVersion Condition="'$(APPVEYOR_REPO_TAG_NAME)' != ''">$(APPVEYOR_REPO_TAG_NAME)</PackageVersion>
     </PropertyGroup>
 
     <PropertyGroup>
