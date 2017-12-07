@@ -21,7 +21,7 @@ dotnet_csproj:
   file_version: '{version}'
   informational_version: '{version}'
 artifacts:
-  - path: 'nupkg\*.nupkg'
+  - path: 'src\Midmid.Configuration.MongoDb\nupkg\*.nupkg'
     name: Midmid.Configuration.MongoDb
     type: .nupkg
 deploy:
@@ -30,4 +30,4 @@ deploy:
     api_key:
       secure: JqkPzMaEgaWCJqqIuOdnqOp6WI7H6RiJxx6+dBKaXb9L8dJ0xgQI03YVSndhv/eh
     skip_symbols: true
-    artifact: 'nupkg\*.nupkg'
+    artifact: 'src\Midmid.Configuration.MongoDb\nupkg\*.nupkg'
