@@ -7,14 +7,19 @@ namespace Microsoft.Extensions.Configuration
     {
         public static IConfigurationBuilder AddMongoDb(this IConfigurationBuilder configurationBuilder, string connectionString)
         {
-            return AddMongoDb(configurationBuilder, connectionString, "AppSettings");
+            return AddMongoDb(configurationBuilder, new DefaultMongoDbReader(connectionString), "AppSettings");
         }
 
-        public static IConfigurationBuilder AddMongoDb(this IConfigurationBuilder configurationBuilder, string connectionString, string collectionName)
+        public static IConfigurationBuilder AddMongoDb(this IConfigurationBuilder configurationBuilder, IMongoDbReader mongoDbReader)
         {
-            if (connectionString == null)
+            return AddMongoDb(configurationBuilder, mongoDbReader, "AppSettings");
+        }
+
+        public static IConfigurationBuilder AddMongoDb(this IConfigurationBuilder configurationBuilder, IMongoDbReader mongoDbReader, string collectionName)
+        {
+            if (mongoDbReader == null)
             {
-                throw new ArgumentNullException(nameof(connectionString));
+                throw new ArgumentNullException(nameof(mongoDbReader));
             }
 
             if (collectionName == null)
@@ -22,7 +27,7 @@ namespace Microsoft.Extensions.Configuration
                 throw new ArgumentNullException(nameof(collectionName));
             }
 
-            configurationBuilder.Add(new MongoDbConfigurationSource { ConnectionString = connectionString, CollectionName = collectionName });
+            configurationBuilder.Add(new MongoDbConfigurationSource { MongoDbReader = mongoDbReader, CollectionName = collectionName });
             return configurationBuilder;
         }
 
