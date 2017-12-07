@@ -34,7 +34,7 @@
         <Error Text="One or more test(s) failed." Condition="'$(AllTestsPassed)' != 'true'" />
     </Target>
 
-    <Target Name="Package">
+    <Target Name="Package" Condition="$(PackageVersion) != ''">
         <Exec Command='"$(DotNetExe)" pack "$(SolutionDir)src\Midmid.Configuration.MongoDb\Midmid.Configuration.MongoDb.csproj" --no-build --configuration $(Configuration) /p:PackageVersion=$(PackageVersion) --output nupkg' />
     </Target>
 </Project>
